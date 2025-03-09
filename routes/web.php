@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\StockDataController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -12,7 +13,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
 
-    Route::get('/stocks', [StockDataController::class, 'index']) -> name(stocks.index);
+
+    Route::get('stocks', [StockDataController::class, 'index'])->name('stocks.index');
 
 });
 
