@@ -16,7 +16,7 @@ class StockDataController extends Controller
             
             // Make parameters dynamic with defaults
             $stockSymbol = $request->input('symbol', 'ANET');
-            $days = $request->input('days', 10);
+            $days = $request->input('days', 100);
             $window = $request->input('window', 3);
             
             // Construct API URL (base URL should be in config or .env)
@@ -24,17 +24,20 @@ class StockDataController extends Controller
             $response = $client->get($apiUrl)->getBody()->getContents();
             
             // Decode the JSON response into an array for Plotly
+        
+            function isJson($string) {
+                json_decode($string);
+                return json_last_error() === JSON_ERROR_NONE;
+             }
+        
+             
+
+            $response = json_decode($response, true);
+            
             $plotData = json_decode($response, true);
-            
-            
-            
-            dd(gettype(json_decode($plotDatam, true)));
-
-
-            
             // Check if decoding failed
-            if (!$plotData) {
-                    throw new \Exception('Invalid JSON response from API');
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new \Exception('Invalid JSON response from API');
             }
         } catch (RequestException $e) {
             // Log network-related errors
