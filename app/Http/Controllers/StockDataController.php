@@ -13,8 +13,16 @@ class StockDataController extends Controller
     {
         try {
             $client = new Client();
-            
-            // Make parameters dynamic with defaults
+            // Ensure query parameters are properly retrieved
+            $stockSymbol = $request->query('symbol', 'ANET');
+            $days = $request->query('days', 100);
+            $window = $request->query('window', 3);
+
+            // Validate input parameters
+            if (!is_string($stockSymbol) || !is_numeric($days) || !is_numeric($window)) {
+                throw new \InvalidArgumentException('Invalid input parameters');
+            }
+        
             $stockSymbol = $request->input('symbol', 'ANET');
             $days = $request->input('days', 100);
             $window = $request->input('window', 3);
