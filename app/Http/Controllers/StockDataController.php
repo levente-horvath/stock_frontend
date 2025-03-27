@@ -63,7 +63,10 @@ class StockDataController extends Controller
             ];
         }
 
-        // Pass data to Inertia React component
+        // Pass data to Inertia React component or return JSON if requested
+        if ($request->wantsJson()) {
+            return response()->json(['plotData' => $plotData]);
+        }
         return inertia('stock', [
             'plotData' => $plotData
         ]);
