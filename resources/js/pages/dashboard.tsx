@@ -4,6 +4,7 @@ import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import StockPlot from '@/components/StockPlot';
 import { useState } from 'react';
+import StockForm from '@/components/stock-form';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -28,6 +29,7 @@ export default function Dashboard() {
                     'Accept': 'application/json'
                 }
             });
+
             const data = await response.json();
             console.log('Fetched data:', data);
             if (data.plotData) {
@@ -55,41 +57,13 @@ export default function Dashboard() {
                 <div className="grid auto-rows-min gap-4 md:grid-cols-3">
                     <div className="border-sidebar-border/70 dark:border-sidebar-border relative overflow-hidden rounded-xl border p-4 flex flex-col justify-center items-center md:col-span-1" style={{ width: '300px', height: '300px' }}>
                         <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                        <form
-                            onSubmit={handleFormSubmit}
-                            className="relative z-10 flex flex-col gap-4 w-full max-w-sm"
-                        >
-                            <input
-                                type="text"
-                                name="stockSymbol"
-                                placeholder="Stock Symbol"
-                                className="w-full rounded border p-2"
-                                required
-                            />
-                            <input
-                                type="number"
-                                name="days"
-                                placeholder="Days"
-                                className="w-full rounded border p-2"
-                                required
-                            />
-                            <input
-                                type="number"
-                                name="timeWindow"
-                                placeholder="Window"
-                                className="w-full rounded border p-2"
-                                required
-                            />
-                            <button
-                                type="submit"
-                                className="w-full rounded bg-blue-500 p-2 text-white hover:bg-blue-600"
-                            >
-                                Update Plot
-                            </button>
-                        </form>
+                        <p className="text-center text-lg font-semibold">Moving average</p>
+                        
+                        <StockForm onSubmit={handleFormSubmit} />
                     </div>
                     <div className="border-sidebar-border/70 dark:border-sidebar-border relative aspect-video overflow-hidden rounded-xl border">
                         <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+                        
                     </div>
                 </div>
                 <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border md:min-h-min">
