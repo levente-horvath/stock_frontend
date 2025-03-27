@@ -11,12 +11,11 @@ export default function StockForm({ onDataUpdate }: StockFormProps) {
     const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const stockSymbol = (e.target as any).stockSymbol.value;
-        const days = (e.target as any).days.value;
-        const timeWindow = (e.target as any).timeWindow.value;
+        const duration = (e.target as any).duration.value;
 
         setLoading(true);
         try {
-            const response = await fetch(`/stocks?symbol=${stockSymbol}&days=${days}&window=${timeWindow}`, {
+            const response = await fetch(`/stockprice?symbol=${stockSymbol}&duration=${duration}`, {
                 headers: {
                     'Accept': 'application/json',
                 },
@@ -57,18 +56,12 @@ export default function StockForm({ onDataUpdate }: StockFormProps) {
             />
             <input
                 type="number"
-                name="days"
-                placeholder="Days"
+                name="duration"
+                placeholder="Duration (days)"
                 className="w-full rounded border p-2"
                 required
             />
-            <input
-                type="number"
-                name="timeWindow"
-                placeholder="Window"
-                className="w-full rounded border p-2"
-                required
-            />
+            
             <button
                 type="submit"
                 className="w-full rounded bg-blue-500 p-2 text-white hover:bg-blue-600"
