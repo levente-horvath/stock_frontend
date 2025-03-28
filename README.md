@@ -1,1 +1,1 @@
-work in progres frontent for my financial data api
+work in progres frontend for my financial data api
