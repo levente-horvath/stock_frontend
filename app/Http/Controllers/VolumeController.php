@@ -25,13 +25,15 @@ class VolumeController extends Controller
             // Ensure query parameters are properly retrieved
             $stockSymbol = $request->query('symbol', 'ANET');
             $duration = $request->query('duration', 100);
+            $type = $request->query('type', 100);
+            
 
             // Validate input parameters
             if (!is_string($stockSymbol) || !is_numeric($duration)) {
                 throw new \InvalidArgumentException('Invalid input parameters');
             }
         
-            $apiUrl = "http://38.242.157.16:8000/plot_volume_plotly/{$stockSymbol}/{$duration}/";
+            $apiUrl = "http://38.242.157.16:8000/plot_{$type}_plotly/{$stockSymbol}/{$duration}/";
 
             // Decode the JSON response into an array for Plotly
             $plotData = $this->to_plotly($apiUrl);

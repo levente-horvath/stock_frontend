@@ -21,36 +21,12 @@ export default function Dashboard() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
-            <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <div className="border-sidebar-border/70 dark:border-sidebar-border relative overflow-hidden rounded-xl border p-4 flex flex-col justify-center items-center md:col-span-1" style={{ width: '300px', height: '300px' }}>
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                        <p className="text-center text-lg font-semibold">Moving average</p>
-                        
-                        <StockForm onDataUpdate={setPlotData} />
-                    </div>
-
-                    <div className="border-sidebar-border/70 dark:border-sidebar-border relative overflow-hidden rounded-xl border p-4 flex flex-col justify-center items-center md:col-span-1" style={{ width: '300px', height: '300px' }}>
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                        <p className="text-center text-lg font-semibold">Volume data</p>
-                        
-                        <VolumeForm onDataUpdate={setPlotData} />
-                    </div>
-
-                    <div className="border-sidebar-border/70 dark:border-sidebar-border relative overflow-hidden rounded-xl border p-4 flex flex-col justify-center items-center md:col-span-1" style={{ width: '300px', height: '300px' }}>
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                        <p className="text-center text-lg font-semibold">Price data</p>
-                        
-                        <PriceForm onDataUpdate={setPlotData} />
-                    </div>
-
-
+            <div style={{ display: 'flex', height: '100vh' }}>
+                <div style={{ width: '300px', padding: '10px', borderRight: '1px solid #ccc', overflowY: 'auto' }}>
+                    <VolumeForm onDataUpdate={setPlotData} />
                 </div>
-                <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border md:min-h-min">
-                    <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    <div className="relative z-10 h-full">
-                        <StockPlot plotData={plotData} />
-                    </div>
+                <div style={{ flex: 1, padding: '10px' }}>
+                    <StockPlot plotData={plotData} />
                 </div>
             </div>
         </AppLayout>

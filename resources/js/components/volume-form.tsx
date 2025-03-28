@@ -12,10 +12,12 @@ export default function StockForm({ onDataUpdate }: StockFormProps) {
         e.preventDefault();
         const stockSymbol = (e.target as any).stockSymbol.value;
         const duration = (e.target as any).duration.value;
+        const type = (e.target as any).type.value;
+        
 
-        setLoading(true);
+        setLoading(true); 
         try {
-            const response = await fetch(`/volume?symbol=${stockSymbol}&duration=${duration}`, {
+            const response = await fetch(`/volume?symbol=${stockSymbol}&duration=${duration}&type=${type}`, {
                 headers: {
                     'Accept': 'application/json',
                 },
@@ -61,7 +63,23 @@ export default function StockForm({ onDataUpdate }: StockFormProps) {
                 className="w-full rounded border p-2"
                 required
             />
-            
+            <select
+                name="type"
+                className="w-full rounded border p-2"
+                required
+            >
+                <option value="volume">Volume</option>
+                <option value="price">Price</option>
+                <option value="adl">Accumulation/Distribution Line</option>
+                <option value="vwap">Volume Weighted Average Price</option>
+                <option value="ichimoku">Ichimoku Cloud</option>
+                <option value="std_dev">Standard Deviation</option>
+                <option value="parabolic_sar">Parabolic SAR</option>
+                <option value="cci">Commodity Channel Index (CCI)</option>
+                <option value="stochastic">Stochastic Oscillator</option>
+                <option value="obv">On-Balance Volume (OBV)</option>
+                <option value="macd">Moving Average Convergence Divergence (MACD)</option>
+            </select>
             <button
                 type="submit"
                 className="w-full rounded bg-blue-500 p-2 text-white hover:bg-blue-600"
