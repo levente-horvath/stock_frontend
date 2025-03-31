@@ -1,1 +1,1 @@
-Webapp utiziling my financial data API
+Webapp utilizing my financial data API
