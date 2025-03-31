@@ -2,10 +2,21 @@ import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
 import AppLogo from './app-logo';
+import GeneralStockForm from './general-stock-form';
+import SavePlotButton from './save-plot-button';
+import SavedPlotsList from './saved-plots-list';
+import { usePlotData } from '@/contexts/PlotDataContext';
+
+// Define the NavItem interface locally if it's not properly imported
+interface NavItem {
+    title: string;
+    url: string;
+    icon?: any;
+    isActive?: boolean;
+}
 
 const mainNavItems: NavItem[] = [
     {
@@ -24,6 +35,8 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    const { setPlotData } = usePlotData();
+    
     return (
         <Sidebar collapsible="offcanvas" variant="floating">
             <SidebarHeader>
@@ -40,6 +53,12 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain items={mainNavItems} />
+                <div className="px-4 py-4">
+                    <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Stock Analysis</h3>
+                    <GeneralStockForm onDataUpdate={setPlotData} />
+                    <SavePlotButton />
+                    <SavedPlotsList />
+                </div>
             </SidebarContent>
 
             <SidebarFooter>

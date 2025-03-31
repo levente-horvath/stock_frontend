@@ -1,12 +1,12 @@
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem, PlotData } from '@/types';
+import { PlotData } from '@/types';
 import { Head } from '@inertiajs/react';
 import StockPlot from '@/components/StockPlot';
-import { useState } from 'react';
-import  GeneralStockForm from '@/components/general-stock-form';
+import { usePlotData } from '@/contexts/PlotDataContext';
+import { useEffect, useRef } from 'react';
 
-const breadcrumbs: BreadcrumbItem[] = [
+const breadcrumbs = [
     {
         title: 'Dashboard',
         href: '/dashboard',
@@ -14,18 +14,35 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Dashboard() {
-    const [plotData, setPlotData] = useState<PlotData>({ data: [], layout: { title: 'Loading...' } });
+    const { plotData } = usePlotData();
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    // Set height to fill available space when component mounts and on window resize
+    useEffect(() => {
+        const updateHeight = () => {
+            if (containerRef.current) {
+                // Calculate available height (viewport height minus any headers/navbars)
+                const navbarHeight = 64; // Approximate height of the top navbar
+                const availableHeight = window.innerHeight - navbarHeight;
+                containerRef.current.style.height = `${availableHeight}px`;
+            }
+        };
+
+        // Set initial height
+        updateHeight();
+
+        // Update height on window resize
+        window.addEventListener('resize', updateHeight);
+        
+        // Clean up
+        return () => window.removeEventListener('resize', updateHeight);
+    }, []);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
-            <div style={{ display: 'flex', height: '100vh' }}>
-                <div style={{ width: '300px', padding: '10px', borderRight: '1px solid #ccc', overflowY: 'auto' }}>
-                    <GeneralStockForm onDataUpdate={setPlotData} />
-                </div>
-                <div style={{ flex: 1, padding: '10px' }}>
-                    <StockPlot plotData={plotData} />
-                </div>
+            <div ref={containerRef} className="w-full overflow-hidden">
+                <StockPlot plotData={plotData} />
             </div>
         </AppLayout>
     );
