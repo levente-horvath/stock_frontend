@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Log;
-
+use App\Models\GeneralStock;
 
 
 class GeneralStockController extends Controller
@@ -37,6 +37,17 @@ class GeneralStockController extends Controller
 
             // Decode the JSON response into an array for Plotly
             $plotData = $this->to_plotly($apiUrl);
+
+            if ($request->user()) {
+                GeneralStock::create([
+                    'user_id' => $request->user()->id,
+                    'symbol' => $stockSymbol,
+                    'duration' => $duration,
+                    'type' => $type,
+                    'plot_data' => json_encode($plotData),
+                ]);
+            }
+
 
         } catch (RequestException $e) {
             // Log network-related errors
