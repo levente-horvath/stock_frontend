@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 
 
-class VolumeController extends Controller
+class GeneralStockController extends Controller
 {
     function to_plotly($apiUrl){
         $client = new Client();
@@ -26,18 +26,18 @@ class VolumeController extends Controller
             $stockSymbol = $request->query('symbol', 'ANET');
             $duration = $request->query('duration', 100);
             $type = $request->query('type', 100);
-            
+
 
             // Validate input parameters
             if (!is_string($stockSymbol) || !is_numeric($duration)) {
                 throw new \InvalidArgumentException('Invalid input parameters');
             }
-        
-            $apiUrl = "http://38.242.157.16:8000/plot_{$type}_plotly/{$stockSymbol}/{$duration}/";
+
+            $apiUrl = "https://stocks.leventehorvath.hu/plot_{$type}_plotly/{$stockSymbol}/{$duration}/";
 
             // Decode the JSON response into an array for Plotly
             $plotData = $this->to_plotly($apiUrl);
-            
+
         } catch (RequestException $e) {
             // Log network-related errors
             Log::error('API request failed: ' . $e->getMessage());
@@ -58,7 +58,7 @@ class VolumeController extends Controller
         if ($request->wantsJson()) {
             return response()->json(['plotData' => $plotData]);
         }
-        return inertia('volume', [
+        return inertia('stocks', [
             'plotData' => $plotData
         ]);
     }

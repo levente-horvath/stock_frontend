@@ -30,7 +30,7 @@ class PriceController extends Controller
                 throw new \InvalidArgumentException('Invalid input parameters');
             }
         
-            $apiUrl = "http://38.242.157.16:8000/plot_price_plotly/{$stockSymbol}/{$duration}/";
+            $apiUrl = "https://stocks.leventehorvath.hu/plot_price_plotly/{$stockSymbol}/{$duration}/";
 
             // Decode the JSON response into an array for Plotly
             $plotData = $this->to_plotly($apiUrl);

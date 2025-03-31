@@ -5,7 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\StockDataController;
-use App\Http\Controllers\VolumeController;
+use App\Http\Controllers\GeneralStockController;
 use App\Http\Controllers\PriceController;
 
 
@@ -38,11 +38,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/stocks', [StockDataController::class, 'index']);
+Route::get('/movingstocks', [StockDataController::class, 'index']);
 
-Route::get('/volume', [VolumeController::class, 'index']);
-
-Route::get('/stockprice', [PriceController::class, 'index']);
+Route::get('/stocks', [GeneralStockController::class, 'index']);
 
 
 require __DIR__.'/settings.php';

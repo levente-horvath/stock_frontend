@@ -13,11 +13,6 @@ const mainNavItems: NavItem[] = [
         url: '/dashboard',
         icon: LayoutGrid,
     },
-    {
-        title: 'Stock test',
-        url: '/stocks',
-        icon: LayoutGrid,
-    },
 ];
 
 const footerNavItems: NavItem[] = [
@@ -30,7 +25,7 @@ const footerNavItems: NavItem[] = [
 
 export function AppSidebar() {
     return (
-        <Sidebar collapsible="offcanvas" variant="inset">
+        <Sidebar collapsible="offcanvas" variant="floating">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>

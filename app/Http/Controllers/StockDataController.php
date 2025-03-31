@@ -31,16 +31,16 @@ class StockDataController extends Controller
             if (!is_string($stockSymbol) || !is_numeric($days) || !is_numeric($window)) {
                 throw new \InvalidArgumentException('Invalid input parameters');
             }
-        
+
             $stockSymbol = $request->input('symbol', 'ANET');
             $days = $request->input('days', 100);
             $window = $request->input('window', 3);
-            
-            $apiUrl = "http://38.242.157.16:8000/plot_moving_average_plotly/{$stockSymbol}/{$days}/{$window}";
+
+            $apiUrl = "https://stocks.leventehorvath.hu//plot_moving_average_plotly/{$stockSymbol}/{$days}/{$window}";
 
             // Decode the JSON response into an array for Plotly
             $plotData = $this->to_plotly($apiUrl);
-            
+
         } catch (RequestException $e) {
             // Log network-related errors
             Log::error('API request failed: ' . $e->getMessage());

@@ -5,7 +5,7 @@ interface StockFormProps {
     onDataUpdate: (plotData: PlotData) => void;
 }
 
-export default function StockForm({ onDataUpdate }: StockFormProps) {
+export default function GeneralStockForm ({ onDataUpdate }: StockFormProps) {
     const [loading, setLoading] = useState(false);
 
     const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -13,11 +13,11 @@ export default function StockForm({ onDataUpdate }: StockFormProps) {
         const stockSymbol = (e.target as any).stockSymbol.value;
         const duration = (e.target as any).duration.value;
         const type = (e.target as any).type.value;
-        
 
-        setLoading(true); 
+
+        setLoading(true);
         try {
-            const response = await fetch(`/volume?symbol=${stockSymbol}&duration=${duration}&type=${type}`, {
+            const response = await fetch(`/stocks?symbol=${stockSymbol}&duration=${duration}&type=${type}`, {
                 headers: {
                     'Accept': 'application/json',
                 },

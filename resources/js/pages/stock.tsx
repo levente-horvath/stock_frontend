@@ -15,7 +15,7 @@ const PlotPage: React.FC<PlotPageProps> = ({ plotData }) => {
         <div className="container">
             <h1>Interactive Plot (React + Inertia)</h1>
             <Plot
-                data={plotData.data} 
+                data={plotData.data}
                 layout={plotData.layout}
                 config={{ responsive: true }}
                 style={{ width: '100%', height: '600px' }}
