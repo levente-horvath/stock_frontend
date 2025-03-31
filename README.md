@@ -1,1 +1,1 @@
-work in progres frontent for my financial data api
+Webapp utiziling my financial data API
