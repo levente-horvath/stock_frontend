@@ -9,17 +9,43 @@ class SavedPlot extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
-        'user_id',
         'title',
         'plot_data',
     ];
 
+    /**
+     * The attributes that should be guarded from mass assignment.
+     *
+     * @var array<int, string>
+     */
+    protected $guarded = [
+        'id',
+        'user_id',
+        'created_at',
+        'updated_at',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
 
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array<int, string>
+     */
     protected $appends = ['plotData'];
 
     /**

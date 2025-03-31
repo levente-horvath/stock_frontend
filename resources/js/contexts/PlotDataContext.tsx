@@ -19,6 +19,7 @@ interface PlotDataContextType {
   loadPlot: (id: number) => void;
   deletePlot: (id: number) => Promise<void>;
   fetchSavedPlots: () => Promise<void>;
+  setCurrentUser: (userId: number | null) => void;
 }
 
 const defaultPlotData: PlotData = {
@@ -35,6 +36,7 @@ const PlotDataContext = createContext<PlotDataContextType>({
   loadPlot: () => {},
   deletePlot: async () => {},
   fetchSavedPlots: async () => {},
+  setCurrentUser: () => {},
 });
 
 export const usePlotData = () => useContext(PlotDataContext);
@@ -43,22 +45,41 @@ export const PlotDataProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [plotData, setPlotData] = useState<PlotData>(defaultPlotData);
   const [savedPlots, setSavedPlots] = useState<SavedPlot[]>([]);
   const [loadingSavedPlots, setLoadingSavedPlots] = useState(false);
-
-  // Fetch saved plots on component mount
-  useEffect(() => {
-    fetchSavedPlots();
-  }, []);
+  const [currentUserId, setCurrentUserId] = useState<number | null>(null);
 
   // Function to fetch saved plots from the backend
   const fetchSavedPlots = async () => {
+    // Don't fetch if there's no user
+    if (!currentUserId) return;
+    
     setLoadingSavedPlots(true);
     try {
-      const response = await axios.get('/api/saved-plots');
+      const response = await axios.get('/api/saved-plots', {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        withCredentials: true
+      });
       setSavedPlots(response.data);
     } catch (error) {
       console.error('Error fetching saved plots:', error);
+      setSavedPlots([]);
     } finally {
       setLoadingSavedPlots(false);
+    }
+  };
+
+  // Set current user and refresh plots when user changes
+  const setCurrentUser = (userId: number | null) => {
+    if (userId !== currentUserId) {
+      setSavedPlots([]);
+      setCurrentUserId(userId);
+      
+      if (userId) {
+        fetchSavedPlots();
+      }
     }
   };
 
@@ -68,6 +89,13 @@ export const PlotDataProvider: React.FC<{ children: ReactNode }> = ({ children }
       await axios.post('/api/saved-plots', {
         title,
         plotData,
+      }, {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        withCredentials: true
       });
       await fetchSavedPlots(); // Refresh the list after saving
     } catch (error) {
@@ -87,7 +115,14 @@ export const PlotDataProvider: React.FC<{ children: ReactNode }> = ({ children }
   // Function to delete a saved plot
   const deletePlot = async (id: number) => {
     try {
-      await axios.delete(`/api/saved-plots/${id}`);
+      await axios.delete(`/api/saved-plots/${id}`, {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        withCredentials: true
+      });
       await fetchSavedPlots(); // Refresh the list after deleting
     } catch (error) {
       console.error('Error deleting plot:', error);
@@ -104,7 +139,8 @@ export const PlotDataProvider: React.FC<{ children: ReactNode }> = ({ children }
       savePlot, 
       loadPlot, 
       deletePlot,
-      fetchSavedPlots
+      fetchSavedPlots,
+      setCurrentUser
     }}>
       {children}
     </PlotDataContext.Provider>

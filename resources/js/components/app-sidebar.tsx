@@ -2,13 +2,14 @@ import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
 import AppLogo from './app-logo';
 import GeneralStockForm from './general-stock-form';
 import SavePlotButton from './save-plot-button';
 import SavedPlotsList from './saved-plots-list';
 import { usePlotData } from '@/contexts/PlotDataContext';
+import { useEffect } from 'react';
 
 // Define the NavItem interface locally if it's not properly imported
 interface NavItem {
@@ -35,7 +36,13 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
-    const { setPlotData } = usePlotData();
+    const { setPlotData, setCurrentUser } = usePlotData();
+    const { auth } = usePage().props as any;
+    
+    useEffect(() => {
+        // Set current user whenever auth changes
+        setCurrentUser(auth?.user?.id || null);
+    }, [auth?.user?.id]);
     
     return (
         <Sidebar collapsible="offcanvas" variant="floating">

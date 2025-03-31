@@ -1,11 +1,19 @@
 import { usePlotData } from '@/contexts/PlotDataContext';
-import { BarChart3, Trash2, LoaderCircle } from 'lucide-react';
-import { useState } from 'react';
+import { BarChart3, Trash2, LoaderCircle, RefreshCw } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 export default function SavedPlotsList() {
-    const { savedPlots, loadingSavedPlots, loadPlot, deletePlot } = usePlotData();
+    const { savedPlots, loadingSavedPlots, loadPlot, deletePlot, fetchSavedPlots } = usePlotData();
     const [expandedList, setExpandedList] = useState(false);
     const [deletingId, setDeletingId] = useState<number | null>(null);
+    const [refreshing, setRefreshing] = useState(false);
+
+    // Fetch plots when component mounts and when expandedList becomes true
+    useEffect(() => {
+        if (expandedList) {
+            handleRefresh();
+        }
+    }, [expandedList]);
 
     const toggleExpand = () => {
         setExpandedList(!expandedList);
@@ -27,18 +35,21 @@ export default function SavedPlotsList() {
         }
     };
 
+    const handleRefresh = async () => {
+        setRefreshing(true);
+        try {
+            await fetchSavedPlots();
+        } catch (error) {
+            console.error('Error refreshing plots:', error);
+        } finally {
+            setRefreshing(false);
+        }
+    };
+
     if (loadingSavedPlots) {
         return (
             <div className="mt-6 py-4 flex justify-center">
                 <LoaderCircle className="animate-spin h-5 w-5 text-gray-500" />
-            </div>
-        );
-    }
-
-    if (savedPlots.length === 0 && !loadingSavedPlots) {
-        return (
-            <div className="mt-6">
-                <p className="text-sm text-gray-500 dark:text-gray-400 text-center">No saved plots yet</p>
             </div>
         );
     }
@@ -49,15 +60,35 @@ export default function SavedPlotsList() {
                 <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
                     Saved Plots ({savedPlots.length})
                 </h3>
-                <button 
-                    onClick={toggleExpand} 
-                    className="text-xs text-blue-600 hover:text-blue-800 focus:outline-none"
-                >
-                    {expandedList ? 'Collapse' : 'Expand'}
-                </button>
+                <div className="flex items-center space-x-2">
+                    {expandedList && (
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleRefresh();
+                            }}
+                            className="text-xs text-blue-600 hover:text-blue-800 focus:outline-none"
+                            disabled={refreshing || loadingSavedPlots}
+                        >
+                            <RefreshCw className={`h-3 w-3 ${refreshing ? 'animate-spin' : ''}`} />
+                        </button>
+                    )}
+                    <button 
+                        onClick={toggleExpand} 
+                        className="text-xs text-blue-600 hover:text-blue-800 focus:outline-none"
+                    >
+                        {expandedList ? 'Collapse' : 'Expand'}
+                    </button>
+                </div>
             </div>
 
-            {expandedList && (
+            {expandedList && savedPlots.length === 0 && !loadingSavedPlots && (
+                <div className="py-2">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center">No saved plots yet</p>
+                </div>
+            )}
+
+            {expandedList && savedPlots.length > 0 && (
                 <div className="space-y-2 max-h-60 overflow-y-auto">
                     {savedPlots.map((plot) => (
                         <div 
